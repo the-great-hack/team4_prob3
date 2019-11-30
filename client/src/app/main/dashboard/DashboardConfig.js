@@ -7,7 +7,7 @@ export const DashboardConfig = {
       config: {}
     }
   },
-  auth: authRoles.normal,
+  //auth: authRoles.normal,
   routes: [
     {
       path: "/dashboard",
@@ -15,4 +15,3 @@ export const DashboardConfig = {
     }
   ]
 };
-

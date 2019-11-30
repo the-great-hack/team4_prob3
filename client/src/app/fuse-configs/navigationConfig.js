@@ -16,30 +16,6 @@ const navigationConfig = [
         url: "/dashboard"
       }
     ]
-  },
-  {
-    id: "calendar",
-    title: "Calendar",
-    type: "item",
-    auth: authRoles.admin,
-    icon: "today",
-    url: "/calendar"
-  },
-  {
-    id: "adminDashboard",
-    title: "Admin Dashboard",
-    type: "group",
-    icon: "chat",
-    auth: authRoles.admin,
-    children: [
-      {
-        id: "contacts",
-        title: "Contacts",
-        type: "item",
-        icon: "account_box",
-        url: "/admin/dashboard"
-      }
-    ]
   }
 ];
 

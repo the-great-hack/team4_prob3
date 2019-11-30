@@ -4,7 +4,7 @@ const initialState = null;
 
 const userReducer = function(state = initialState, action) {
   switch (action.type) {
-    case Actions.GET_USER:
+    case Actions.GET_TEAMS:
       return {
         ...action.payload
       };

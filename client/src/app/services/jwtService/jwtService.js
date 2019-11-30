@@ -3,7 +3,6 @@ import history from "@history";
 import FuseUtils from "@fuse/FuseUtils";
 import config from "app/config";
 
-
 class jwtService extends FuseUtils.EventEmitter {
   init() {
     this.setInterceptors();
@@ -71,8 +70,7 @@ class jwtService extends FuseUtils.EventEmitter {
   };
 
   signInWithEmailAndPassword = (email, password) => {
-    return new Promise( (resolve, reject) => {
-
+    return new Promise((resolve, reject) => {
       axios
         .post(`${config.baseURL}/api/v1/auth/login`, {
           email: email,
@@ -152,13 +150,11 @@ class jwtService extends FuseUtils.EventEmitter {
 }
 
 const redirect = role => {
-  role === "admin"
-    ? history.push({
-        pathname: "/admin/dashboard"
-      })
-    : history.push({
-        pathname: "/dashboard"
-      });
+  if (role === "admin" || role === "user") {
+    history.push({
+      pathname: "/dashboard"
+    });
+  }
 };
 
 const instance = new jwtService();

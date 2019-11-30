@@ -3,7 +3,8 @@
  */
 const authRoles = {
   admin: ["admin"],
-  normal: ["user"],
+  normal: ["user", "admin"],
+  guest: []
 };
 
 export default authRoles;
