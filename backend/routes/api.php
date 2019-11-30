@@ -37,4 +37,9 @@ Route::group(['middleware' => ['api', 'auth:api']], function () {
     Route::post('v1/team/{id}/update', 'API\v1\TeamController@update');
     Route::post('v1/team/{id}/delete', 'API\v1\TeamController@delete');
 
+    Route::post('v1/team/member/store', 'API\v1\TeamController@addTeamMember');
+
+    Route::post('v1/cart/create', 'API\v1\CartController@create');
+    Route::get('v1/cart/team/{id}', 'API\v1\CartController@teamCarts');
+    
 });

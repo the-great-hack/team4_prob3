@@ -17,7 +17,6 @@ import reducer from "./store/reducers";
 import WidgetNow from "./components/WidgetNow";
 import AddTeam from "./components/AddTeam";
 import * as Actions from "./store/actions";
-import constants from "app/constants";
 import DialogBox from "app/main/components/DialogBox";
 import TeamView from "./components/TeamView";
 
@@ -131,22 +130,10 @@ function Dashboard(props) {
                   animation: "transition.slideUpBigIn"
                 }}
               >
-                <TeamView teams={userData} />
-                {/* <Table
-                  headings={constants.teamsTableHeader}
-                  rows={userData}
-                  renderTableBody={rows =>
-                    userData ? (
-                      rows.data.map((row, key) => renderTableRows(row, key))
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan="100%">
-                          <Typography align="center"> No data found</Typography>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  }
-                /> */}
+                <TeamView
+                  teams={userData}
+                  getUpdatedTeams={() => getUpdatedTeams()}
+                />
               </FuseAnimateGroup>
             )}
           </div>

@@ -22,4 +22,8 @@ class Team extends Model
     public function city() {
         return $this->belongsTo(City::class);
     }
+
+    public function carts() {
+        return $this->hasMany(Cart::class);
+    }
 }
