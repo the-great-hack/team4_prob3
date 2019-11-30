@@ -18,4 +18,8 @@ class Cart extends Model
     public function cart() {
         return $this->belongsTo(Team::class);
     }
+
+    public function orderItems() {
+        return $this->hasMany(OrderItem::class);
+    }
 }

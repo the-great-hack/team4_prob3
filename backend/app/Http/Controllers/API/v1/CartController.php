@@ -100,4 +100,19 @@ class CartController
             ]);
         }
     }
+
+    public function cartItems(Request $request, $id) {
+        $cart = Cart::find($id);
+        if($cart) {
+            foreach($cart->orderItems as $item) {
+                $item->item_name = $item->menu->name;
+                $item->restaurant_name = $item->menu->restaurant->name;
+                unset($item->menu);
+            }
+        }
+
+        return response()->json([
+            'data' => $cart
+        ]);
+    }
 }
