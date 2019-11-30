@@ -22,13 +22,19 @@ Route::group(['middleware' => ['api']], function () {
     Route::post('v1/user/access-token', 'API\v1\AuthController@accessToken');
 
     Route::get('v1/city/list', 'API\v1\CityController@index');
+
+    Route::get('v1/restaurant', 'API\v1\RestaurantController@index');
+    Route::get('v1/menu/restaurant/{id}', 'API\v1\MenuController@show');
 });
 
 Route::group(['middleware' => ['api', 'auth:api']], function () {
     Route::get('v1/user', 'API\v1\UserController@profile');
     Route::post('v1/user/update', 'API\v1\UserController@update');
 
+    Route::get('v1/user/teams', 'API\v1\UserController@teams');
+
     Route::post('v1/team/store', 'API\v1\TeamController@store');
     Route::post('v1/team/{id}/update', 'API\v1\TeamController@update');
     Route::post('v1/team/{id}/delete', 'API\v1\TeamController@delete');
+
 });

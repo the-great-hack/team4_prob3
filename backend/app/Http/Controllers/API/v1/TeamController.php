@@ -7,7 +7,6 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class TeamController
 {
@@ -26,7 +25,11 @@ class TeamController
         }
         $team = Team::create($request->all());
         $api_token = $request->input('api_token');
+        if(!$api_token) {
+            $api_token = get_bearer_token();
+        }
         $user = User::where('api_token', $api_token)->first();
+        $team->users()->attach($user->id);
         $user->org_creator = 1;
         $user->save();
         return response()->json(

@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Restaurant extends Model
+class Menu extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -12,10 +12,10 @@ class Restaurant extends Model
      * @var array
      */
     protected $fillable = [
-        'name'
+        'restaurant_id'
     ];
 
-    public function menus() {
-        return $this->hasMany(Menu::class);
+    public function restaurant() {
+        return $this->belongsTo(Restaurant::class);
     }
 }

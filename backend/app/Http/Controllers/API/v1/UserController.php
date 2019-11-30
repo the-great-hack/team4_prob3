@@ -13,6 +13,9 @@ class UserController
     public function profile(Request $request)
     {
         $token = $request->input('api_token');
+        if(!$token) {
+            $token = get_bearer_token();
+        }
         $user = User::where('api_token', $token)->first();
         
         $data['user']['data']['displayName'] = $user->name;
@@ -61,5 +64,25 @@ class UserController
         return response()->json(
             $data
         );
+    }
+
+    public function teams(Request $request) {
+
+        $token = $request->input('api_token');
+        if(!$token) {
+            $token = get_bearer_token();
+        }
+        $user = User::where('api_token', $token)->first();
+        $teams = $user->teams;
+        foreach($teams as $team)  {
+            $team->city_name = $team->city->name;
+            $team->member_count = $team->users->count();
+            unset($team->city);
+            unset($team->pivot);
+            unset($team->users);
+        }
+        return response()->json([
+            'data' => $teams
+        ]);
     }
 }

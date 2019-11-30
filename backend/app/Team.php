@@ -18,4 +18,8 @@ class Team extends Model
     public function users() {
         return $this->belongsToMany(User::class);
     }
+
+    public function city() {
+        return $this->belongsTo(City::class);
+    }
 }
