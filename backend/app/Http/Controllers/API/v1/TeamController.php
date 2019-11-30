@@ -25,6 +25,10 @@ class TeamController
             ]);
         }
         $team = Team::create($request->all());
+        $api_token = $request->input('api_token');
+        $user = User::where('api_token', $api_token)->first();
+        $user->org_creator = 1;
+        $user->save();
         return response()->json(
             ['data' => $team ]
         );
