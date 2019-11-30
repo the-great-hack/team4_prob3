@@ -17,6 +17,7 @@ class CreateCartsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('team_id');
             $table->string('cart_total')->default(0);
+            $table->unsignedTinyInteger('status')->default(0);
             $table->timestamps();
         });
     }
