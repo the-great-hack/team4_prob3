@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Paper } from "@material-ui/core";
-import axios from "axios";
-import config from "app/config";
+import React from "react";
+import { Paper, Button } from "@material-ui/core";
 import ReactTable from "react-table";
 import _ from "@lodash";
 
@@ -32,6 +30,26 @@ function ViewCartItems(props) {
       accessor: "member_count",
       headerStyle: { whiteSpace: "unset" },
       style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Status",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" },
+      Cell: cell => (
+        <Button color="primary" variant="contained">
+          Pending
+        </Button>
+      )
+    },
+    {
+      Header: "Action",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" },
+      Cell: cell => (
+        <Button color="secondary" variant="contained">
+          Place Order
+        </Button>
+      )
     }
   ];
 
