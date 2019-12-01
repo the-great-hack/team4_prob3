@@ -19,6 +19,8 @@ import AddTeam from "./components/AddTeam";
 import * as Actions from "./store/actions";
 import DialogBox from "app/main/components/DialogBox";
 import TeamView from "./components/TeamView";
+import CreateCart from "./components/CreateCart";
+import Carts from "./tabs/Carts";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,7 +39,12 @@ function Dashboard(props) {
   const dispatch = useDispatch();
   const pageLayout = useRef(null);
   const [tabValue, setTabValue] = useState(0);
-  const [open, setDialog] = useState(false);
+  const [open, setDialog] = useState({
+    title: "",
+    isOpen: false,
+    type: ""
+  });
+  const [isTeamRedirect, setIsTeamRedirect] = useState(0);
 
   const user = useSelector(({ auth }) => auth.user);
 
@@ -56,17 +63,50 @@ function Dashboard(props) {
   };
 
   const handleDialogClose = () => {
-    setDialog(false);
+    setDialog({
+      ...open,
+      isOpen: false
+    });
   };
 
+  const setDialogBox = (title, type) => {
+    setDialog({
+      ...open,
+      isOpen: true,
+      title: title,
+      type: type
+    });
+  };
+
+  const openCartPage = teamId => {
+    setIsTeamRedirect(teamId);
+    setTabValue(2);
+  };
+
+  const passDialogContent = type => {
+    switch (type) {
+      case "addTeam": {
+        return <AddTeam getTeams={() => getUpdatedTeams()} />;
+      }
+      case "createCart": {
+        return <CreateCart teams={userData} />;
+      }
+      default:
+        return null;
+    }
+  };
+
+  if (!user.role || user.role.length === 0) {
+    return null;
+  }
   return (
     <React.Fragment>
       <DialogBox
         handleDialogClose={handleDialogClose}
-        open={open}
-        title={"Add team"}
+        open={open.isOpen}
+        title={open.title}
       >
-        <AddTeam getTeams={() => getUpdatedTeams()} />
+        {passDialogContent(open.type)}
       </DialogBox>
       <FusePageSimple
         classes={{
@@ -107,6 +147,12 @@ function Dashboard(props) {
           >
             <Tab className="text-14 font-600 normal-case" label="Home" />
             <Tab className="text-14 font-600 normal-case" label="See Teams" />
+            <Tab
+              className="text-14 font-600 normal-case"
+              label="Carts"
+              disabled={!isTeamRedirect}
+            />
+            <Tab className="text-14 font-600 normal-case" label="Edit Cart" />
           </Tabs>
         }
         content={
@@ -118,8 +164,17 @@ function Dashboard(props) {
                   animation: "transition.slideUpBigIn"
                 }}
               >
-                <Button variant="outlined" onClick={() => setDialog(true)}>
+                <Button
+                  variant="outlined"
+                  onClick={() => setDialogBox("Add Team", "addTeam")}
+                >
                   Add Team
+                </Button>
+                <Button
+                  variant="outlined"
+                  onClick={() => setDialogBox("Create Cart", "createCart")}
+                >
+                  Add Cart
                 </Button>
               </FuseAnimateGroup>
             )}
@@ -133,7 +188,18 @@ function Dashboard(props) {
                 <TeamView
                   teams={userData}
                   getUpdatedTeams={() => getUpdatedTeams()}
+                  openCartPage={teamId => openCartPage(teamId)}
                 />
+              </FuseAnimateGroup>
+            )}
+            {tabValue === 2 && (
+              <FuseAnimateGroup
+                className="flex flex-wrap"
+                enter={{
+                  animation: "transition.slideUpBigIn"
+                }}
+              >
+                <Carts teamId={isTeamRedirect} />
               </FuseAnimateGroup>
             )}
           </div>

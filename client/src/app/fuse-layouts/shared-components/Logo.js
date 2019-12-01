@@ -40,7 +40,7 @@ function Logo() {
         className="text-16 ml-12 font-light logo-text"
         color="textPrimary"
       >
-        FitKinect
+        Hackathon
       </Typography>
     </div>
   );

@@ -12,6 +12,7 @@ import {
   LinearProgress,
   Button
 } from "@material-ui/core";
+import { Add, Edit } from "@material-ui/icons";
 import DialogBox from "app/main/components/DialogBox";
 import { TextFieldFormsy } from "@fuse";
 import Formsy from "formsy-react";
@@ -19,7 +20,7 @@ import axios from "axios";
 import config from "app/config";
 
 function TeamView(props) {
-  const { teams, getUpdatedTeams } = props;
+  const { teams, getUpdatedTeams, openCartPage } = props;
   const [open, setDialog] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
   const [submit, setSubmit] = useState(false);
@@ -180,7 +181,13 @@ function TeamView(props) {
                       onClick={() => setDialogBox(item.id)}
                       style={{ color: "green" }}
                     >
-                      <Icon>add</Icon>
+                      <Add />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => openCartPage(item.id)}
+                      style={{ color: "green" }}
+                    >
+                      <Edit />
                     </IconButton>
                   </TableCell>
                 </TableRow>

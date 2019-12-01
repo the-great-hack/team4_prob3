@@ -32,6 +32,7 @@ Route::group(['middleware' => ['api', 'auth:api']], function () {
     Route::post('v1/user/update', 'API\v1\UserController@update');
 
     Route::get('v1/user/teams', 'API\v1\UserController@teams');
+    Route::get('v1/user/carts', 'API\v1\UserController@userCarts');
 
     Route::post('v1/team/store', 'API\v1\TeamController@store');
     Route::post('v1/team/{id}/update', 'API\v1\TeamController@update');

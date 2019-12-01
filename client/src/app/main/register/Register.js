@@ -46,7 +46,7 @@ function Register() {
             fontWeight="fontWeightBold"
             className={classes.text}
           >
-            Welcome to FitKinect!
+            Welcome to Hackathon!
           </Typography>
         </FuseAnimate>
       </div>

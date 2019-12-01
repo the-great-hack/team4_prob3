@@ -32,6 +32,7 @@ class AuthController
             $data['user']['data']['displayName'] = $user->name;
             $data['user']['data']['email'] = $user->email;
             $data['access_token'] = $user->api_token;
+            $data['user']['id']  = $user->id;
             if($user->org_creator) {
                 $role = 'admin';
             } else {
@@ -63,6 +64,7 @@ class AuthController
             $data['user']['data']['displayName'] = $user->name;
             $data['user']['data']['email'] = $user->email;
             $data['access_token'] = $user->api_token;
+            $data['user']['id']  = $user->id;
             if($user->org_creator) {
                 $role = 'admin';
             } else {
@@ -104,6 +106,7 @@ class AuthController
         }
         $data['user']['role'] = $role;
         $data['access_token'] = $user->api_token;
+        $data['user']['id']  = $user->id;
         return response()->json(
             $data
         );
