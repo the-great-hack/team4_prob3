@@ -46,5 +46,7 @@ Route::group(['middleware' => ['api', 'auth:api']], function () {
 
     Route::post('v1/cart/item/add','API\v1\CartController@addItemtoCart');
     Route::post('v1/cart/item/{id}/delete','API\v1\CartController@removeItemtoCart');
+
+    Route::post('v1/order/store','API\v1\OrderController@store');
     
 });
