@@ -56,21 +56,12 @@ class TeamController
         );
     }
 
-    public function delete(Request $request, $id)
+    public function delete($id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'error' => $validator->errors()
-            ]);
-        }
         $team = Team::find($id);
         $team->delete();
         return response()->json(
-            ['data' => 'item deleted']
+            ['data' => 'team deleted']
         );
     }
 

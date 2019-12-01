@@ -13,15 +13,15 @@ class UserController
     public function profile(Request $request)
     {
         $token = $request->input('api_token');
-        if(!$token) {
+        if (!$token) {
             $token = get_bearer_token();
         }
         $user = User::where('api_token', $token)->first();
-        
+
         $data['user']['data']['displayName'] = $user->name;
         $data['user']['data']['email'] = $user->email;
         $data['access_token'] = $user->api_token;
-        if($user->org_creator) {
+        if ($user->org_creator) {
             $role = 'admin';
         } else {
             $role = 'user';
@@ -47,14 +47,14 @@ class UserController
         $token = $request->input('api_token');
         $user = User::where('api_token', $token)->first();
         $user->fill($request->all());
-        if($request->input('password')) {
+        if ($request->input('password')) {
             $user->password = Hash::make($request->input('password'));
         }
         $user->save();
 
         $data['user']['data']['displayName'] = $user->name;
         $data['user']['data']['email'] = $user->email;
-        if($user->org_creator) {
+        if ($user->org_creator) {
             $role = 'admin';
         } else {
             $role = 'user';
@@ -66,15 +66,16 @@ class UserController
         );
     }
 
-    public function teams(Request $request) {
+    public function teams(Request $request)
+    {
 
         $token = $request->input('api_token');
-        if(!$token) {
+        if (!$token) {
             $token = get_bearer_token();
         }
         $user = User::where('api_token', $token)->first();
         $teams = $user->teams;
-        foreach($teams as $team)  {
+        foreach ($teams as $team) {
             $team->city_name = $team->city->name;
             $team->member_count = $team->users->count();
             unset($team->city);
@@ -86,14 +87,25 @@ class UserController
         ]);
     }
 
-    public function userCarts(Request $request) {
+    public function userCarts(Request $request)
+    {
         $token = $request->input('api_token');
-        if(!$token) {
+        if (!$token) {
             $token = get_bearer_token();
         }
         $user = User::where('api_token', $token)->first();
         $teams = $user->teams;
-        foreach($teams as $team)  {
+        foreach ($teams as $team) {
+            $team->carts;
+            foreach ($team->carts as $cart) {
+                foreach ($cart->orderItems as $item) {
+                    $item->item_name = $item->menu->name;
+                    $item->restaurant_name = $item->menu->restaurant->name;
+                    $item->user_name = $item->user->name;
+                    unset($item->menu);
+                    unset($item->user);
+                }
+            }
             $team->city_name = $team->city->name;
             $team->member_count = $team->users->count();
             unset($team->city);

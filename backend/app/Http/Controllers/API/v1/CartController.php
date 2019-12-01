@@ -42,7 +42,8 @@ class CartController
             'menu_id' => 'required',
             'quantity' => 'required',
             'schedule_for' => 'required',
-            'user_id' => 'required'
+            'user_id' => 'required',
+            'team_id' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -107,7 +108,9 @@ class CartController
             foreach($cart->orderItems as $item) {
                 $item->item_name = $item->menu->name;
                 $item->restaurant_name = $item->menu->restaurant->name;
+                $item->user_name = $item->user->name;
                 unset($item->menu);
+                unset($item->user);
             }
         }
 
