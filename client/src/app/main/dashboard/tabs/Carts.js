@@ -5,13 +5,13 @@ import {
   LinearProgress,
   MenuItem
 } from "@material-ui/core";
-import { SelectFormsy } from "@fuse";
+import { SelectFormsy, TextFieldFormsy } from "@fuse";
 import Formsy from "formsy-react";
 import config from "app/config";
 import axios from "axios";
 
 function Carts(props) {
-  const { teams, carts, teamId } = props;
+  const { userId, teamId } = props;
   const [isFormValid, setIsFormValid] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [error, setError] = useState("");
@@ -51,13 +51,18 @@ function Carts(props) {
     setSubmit(true);
     setError(false);
     setSuccessMessage(false);
+    let payload = {
+      ...data,
+      user_id: userId,
+      team_id: teamId
+    };
     try {
       await axios
-        .post(`${config.baseURL}/api/v1/cart/create`, data)
+        .post(`${config.baseURL}/api/v1/cart/item/add`, payload)
         .then(response => {
           if (response.data.data) {
             setSubmit(false);
-            setSuccessMessage("Cart Created");
+            setSuccessMessage("Order Added");
           } else {
             setSubmit(false);
           }
@@ -79,7 +84,7 @@ function Carts(props) {
       >
         <SelectFormsy
           className="my-16"
-          name="cart"
+          name="cart_id"
           label="Select Cart"
           variant="outlined"
           required
@@ -96,7 +101,7 @@ function Carts(props) {
 
         <SelectFormsy
           className="my-16"
-          name="restaurants"
+          name="restaurant_id"
           label="Select Restaurant"
           variant="outlined"
           onChange={e => selectRestaurant(e.target.value)}
@@ -115,7 +120,7 @@ function Carts(props) {
         {isRestaurantSelected && (
           <SelectFormsy
             className="my-16"
-            name="restaurants"
+            name="menu_id"
             label="Select Menu"
             variant="outlined"
             required
@@ -129,6 +134,26 @@ function Carts(props) {
                 );
               })}
           </SelectFormsy>
+        )}
+        {isRestaurantSelected && (
+          <TextFieldFormsy
+            className="my-16"
+            type="number"
+            name="quantity"
+            label="Quantity"
+            variant="outlined"
+            value={1}
+          />
+        )}
+        {isRestaurantSelected && (
+          <TextFieldFormsy
+            className="my-16"
+            type="datetime-local"
+            name="schedule_for"
+            label=""
+            variant="outlined"
+            required
+          />
         )}
 
         {submit && <LinearProgress />}

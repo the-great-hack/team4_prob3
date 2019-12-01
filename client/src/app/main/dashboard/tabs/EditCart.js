@@ -11,21 +11,15 @@ import config from "app/config";
 import axios from "axios";
 
 function EditCart(props) {
-  const { teams, carts, teamId } = props;
   const [isFormValid, setIsFormValid] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [cart, setCart] = useState("");
-  const [isRestaurantSelected, setIsRestaurantSelected] = useState("");
-  const [restaurants, setRestaurant] = useState(0);
 
   useEffect(() => {
-    axios.get(`${config.baseURL}/api/v1/cart/team/${teamId}`).then(res => {
+    axios.get(`${config.baseURL}/api/v1/cart/1/items`).then(res => {
       setCart(res.data);
-    });
-    axios.get(`${config.baseURL}/api/v1/restaurant`).then(res => {
-      setRestaurant(res.data);
     });
   }, []);
 
@@ -37,14 +31,6 @@ function EditCart(props) {
 
   const enableButton = () => {
     setIsFormValid(true);
-  };
-
-  const selectRestaurant = async value => {
-    await axios
-      .get(`${config.baseURL}/api/v1/menu/restaurant/${value}`)
-      .then(res => {
-        setIsRestaurantSelected(res.data);
-      });
   };
 
   async function handleSubmit(data) {
@@ -68,6 +54,20 @@ function EditCart(props) {
     setSubmit(false);
   }
 
+  let temp = [
+    {
+      id: 1,
+      label: "something"
+    },
+    {
+      id: 3,
+      label: "herer"
+    },
+    {
+      id: 2,
+      label: "Asdfs"
+    }
+  ];
   return (
     <div className="max-w-md min-w-md m-auto">
       <Formsy
@@ -77,59 +77,31 @@ function EditCart(props) {
         ref={formRef}
         className="flex flex-col"
       >
+        <Typography variant="subtitle" className="mb-16">
+          Cart total: {cart.data && cart.data.cart_total} Rs
+        </Typography>
+        <Typography variant="subtitle" className="mb-16">
+          Team Id:
+          {cart.data && cart.data.team_id}
+        </Typography>
         <SelectFormsy
           className="my-16"
           name="cart"
-          label="Select Cart"
+          label="Edit Items"
           variant="outlined"
           required
+          value={[1, 2]}
+          multiple
         >
           {cart &&
-            cart.data.map(data => {
+            temp.map(data => {
               return (
                 <MenuItem value={data.id} key={data.id}>
-                  {data.id}
+                  {data.label}
                 </MenuItem>
               );
             })}
         </SelectFormsy>
-
-        <SelectFormsy
-          className="my-16"
-          name="restaurants"
-          label="Select Restaurant"
-          variant="outlined"
-          onChange={e => selectRestaurant(e.target.value)}
-          required
-        >
-          {restaurants &&
-            restaurants.data.map(data => {
-              return (
-                <MenuItem value={data.id} key={data.id}>
-                  {data.name}
-                </MenuItem>
-              );
-            })}
-        </SelectFormsy>
-
-        {isRestaurantSelected && (
-          <SelectFormsy
-            className="my-16"
-            name="restaurants"
-            label="Select Menu"
-            variant="outlined"
-            required
-          >
-            {isRestaurantSelected &&
-              isRestaurantSelected.data.map(data => {
-                return (
-                  <MenuItem value={data.id} key={data.id}>
-                    {data.name}
-                  </MenuItem>
-                );
-              })}
-          </SelectFormsy>
-        )}
 
         {submit && <LinearProgress />}
         {error && (

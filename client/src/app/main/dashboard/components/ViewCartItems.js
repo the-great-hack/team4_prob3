@@ -1,83 +1,117 @@
-import React, { useState, useRef } from "react";
-import {
-  Table,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography,
-  Paper,
-  IconButton,
-  Icon,
-  LinearProgress,
-  Button
-} from "@material-ui/core";
-import DialogBox from "app/main/components/DialogBox";
-import { TextFieldFormsy } from "@fuse";
-import Formsy from "formsy-react";
+import React, { useState, useEffect } from "react";
+import { Paper } from "@material-ui/core";
 import axios from "axios";
 import config from "app/config";
+import ReactTable from "react-table";
+import _ from "@lodash";
 
 function ViewCartItems(props) {
-  const { teams, getUpdatedTeams, openCartPage } = props;
   const [cartItems, setCartItems] = useState({});
 
   useEffect(() => {
-    axios.get(`${config.baseURL}/api/v1/cart/team/${teamId}`).then(res => {
+    axios.get(`${config.baseURL}/api/v1/user/carts`).then(res => {
       setCartItems(res.data);
     });
   }, []);
 
+  const columns = [
+    {
+      Header: "Team Name",
+      accessor: "name",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Address",
+      accessor: "delivery_address",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "City Name",
+      accessor: "city_name",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Members Count",
+      accessor: "member_count",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    }
+  ];
+
+  const cartsHeaders = [
+    {
+      Header: "Team Id",
+      accessor: "team_name",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Total",
+      accessor: "total",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Item Name",
+      accessor: "item_name",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Restaurant",
+      accessor: "restaurant_name",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    },
+    {
+      Header: "Schedule for",
+      accessor: "schedule_for",
+      headerStyle: { whiteSpace: "unset" },
+      style: { whiteSpace: "unset" }
+    }
+  ];
+
+  const formatResponse = data => {
+    let newCart = data.carts.map(x => x.order_items);
+    if (!newCart[0] || !newCart) {
+      return [];
+    }
+    let response = newCart[0].map(item => {
+      return {
+        ...item,
+        team_name: data.name,
+        total: parseInt(item.total)
+      };
+    });
+    return response;
+  };
+
   return (
     <Paper className="w-full rounded-8 shadow-none border-1">
-      <div className="flex items-center justify-between px-16 h-64 border-b-1">
-        <Typography className="text-16">Teams</Typography>
-      </div>
-
-      <div className="table-responsive">
-        <Table className="w-full min-w-full">
-          <TableHead>
-            <TableRow>
-              <TableCell className="whitespace-no-wrap">Cart</TableCell>
-              <TableCell className="whitespace-no-wrap">Team Id</TableCell>
-              <TableCell className="whitespace-no-wrap">Cart total</TableCell>
-              <TableCell className="whitespace-no-wrap">Order Items</TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {cartItems &&
-              cartItems.data.map((item, index) => (
-                <TableRow key={index}>
-                  <TableCell className="whitespace-no-wrap">
-                    {item.name}
-                  </TableCell>
-
-                  <TableCell className="whitespace-no-wrap">
-                    {item.delivery_address}
-                  </TableCell>
-                  <TableCell className="whitespace-no-wrap">
-                    {item.member_count}
-                  </TableCell>
-                  <TableCell className="whitespace-no-wrap px-0">
-                    <IconButton
-                      onClick={() => setDialogBox(item.id)}
-                      style={{ color: "green" }}
-                    >
-                      <Icon>add</Icon>
-                    </IconButton>
-                    <IconButton
-                      onClick={() => openCartPage(item.id)}
-                      style={{ color: "green" }}
-                    >
-                      <Icon>check</Icon>
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </div>
+      <ReactTable
+        data={cartItems.data}
+        columns={columns}
+        pages={0}
+        showPagination={false}
+        SubComponent={row => {
+          const nestedTable = formatResponse(row.original);
+          const totalPrice = _.sumBy(nestedTable, "total");
+          return (
+            <div>
+              <br />
+              <p>Cart total amount: {totalPrice}</p>
+              <ReactTable
+                data={nestedTable}
+                columns={cartsHeaders}
+                showPagination={false}
+              />
+            </div>
+          );
+        }}
+      />
     </Paper>
   );
 }

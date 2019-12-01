@@ -20,7 +20,9 @@ import * as Actions from "./store/actions";
 import DialogBox from "app/main/components/DialogBox";
 import TeamView from "./components/TeamView";
 import CreateCart from "./components/CreateCart";
+import ViewCartItems from "./components/ViewCartItems";
 import Carts from "./tabs/Carts";
+import EditCart from "./tabs/EditCart";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -176,6 +178,7 @@ function Dashboard(props) {
                 >
                   Add Cart
                 </Button>
+                <ViewCartItems />
               </FuseAnimateGroup>
             )}
             {tabValue === 1 && (
@@ -189,6 +192,7 @@ function Dashboard(props) {
                   teams={userData}
                   getUpdatedTeams={() => getUpdatedTeams()}
                   openCartPage={teamId => openCartPage(teamId)}
+                  userRole={user.role}
                 />
               </FuseAnimateGroup>
             )}
@@ -199,7 +203,17 @@ function Dashboard(props) {
                   animation: "transition.slideUpBigIn"
                 }}
               >
-                <Carts teamId={isTeamRedirect} />
+                <Carts teamId={isTeamRedirect} userId={user.id} />
+              </FuseAnimateGroup>
+            )}
+            {tabValue === 3 && (
+              <FuseAnimateGroup
+                className="flex flex-wrap"
+                enter={{
+                  animation: "transition.slideUpBigIn"
+                }}
+              >
+                <EditCart />
               </FuseAnimateGroup>
             )}
           </div>

@@ -8,11 +8,10 @@ import {
   Typography,
   Paper,
   IconButton,
-  Icon,
   LinearProgress,
   Button
 } from "@material-ui/core";
-import { Add, Edit } from "@material-ui/icons";
+import { Add, Edit, Delete } from "@material-ui/icons";
 import DialogBox from "app/main/components/DialogBox";
 import { TextFieldFormsy } from "@fuse";
 import Formsy from "formsy-react";
@@ -65,6 +64,18 @@ function TeamView(props) {
     }
     setSubmit(false);
   }
+
+  const deleteTeam = async teamId => {
+    try {
+      await axios
+        .post(`${config.baseURL}/api/v1/team/${teamId}/delete`)
+        .then(response => {
+          if (response.data.data) {
+            getUpdatedTeams();
+          }
+        });
+    } catch (err) {}
+  };
 
   const setDialogBox = teamId => {
     setTeamId(teamId);
@@ -188,6 +199,12 @@ function TeamView(props) {
                       style={{ color: "green" }}
                     >
                       <Edit />
+                    </IconButton>
+                    <IconButton
+                      onClick={() => deleteTeam(item.id)}
+                      style={{ color: "green" }}
+                    >
+                      <Delete />
                     </IconButton>
                   </TableCell>
                 </TableRow>
