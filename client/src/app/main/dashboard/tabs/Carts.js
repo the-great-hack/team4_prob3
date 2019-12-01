@@ -11,7 +11,7 @@ import config from "app/config";
 import axios from "axios";
 
 function Carts(props) {
-  const { userId, teamId } = props;
+  const { userId, teamId, getCartData } = props;
   const [isFormValid, setIsFormValid] = useState(false);
   const [submit, setSubmit] = useState(false);
   const [error, setError] = useState("");
@@ -63,6 +63,7 @@ function Carts(props) {
           if (response.data.data) {
             setSubmit(false);
             setSuccessMessage("Order Added");
+            getCartData();
           } else {
             setSubmit(false);
           }

@@ -23,6 +23,8 @@ import CreateCart from "./components/CreateCart";
 import ViewCartItems from "./components/ViewCartItems";
 import Carts from "./tabs/Carts";
 import EditCart from "./tabs/EditCart";
+import axios from "axios";
+import config from "app/config";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,6 +49,7 @@ function Dashboard(props) {
     type: ""
   });
   const [isTeamRedirect, setIsTeamRedirect] = useState(0);
+  const [cartItems, setCartItems] = useState(false);
 
   const user = useSelector(({ auth }) => auth.user);
 
@@ -54,7 +57,14 @@ function Dashboard(props) {
 
   useEffect(() => {
     dispatch(Actions.getTeamData());
+    getCartData();
   }, [dispatch]);
+
+  const getCartData = () => {
+    axios.get(`${config.baseURL}/api/v1/user/carts`).then(res => {
+      setCartItems(res.data);
+    });
+  };
 
   const handleChangeTab = (event, tabValue) => {
     setTabValue(tabValue);
@@ -62,6 +72,7 @@ function Dashboard(props) {
 
   const getUpdatedTeams = () => {
     dispatch(Actions.getTeamData());
+    getCartData();
   };
 
   const handleDialogClose = () => {
@@ -178,7 +189,7 @@ function Dashboard(props) {
                 >
                   Add Cart
                 </Button>
-                <ViewCartItems />
+                <ViewCartItems cartItems={cartItems} />
               </FuseAnimateGroup>
             )}
             {tabValue === 1 && (
@@ -203,7 +214,11 @@ function Dashboard(props) {
                   animation: "transition.slideUpBigIn"
                 }}
               >
-                <Carts teamId={isTeamRedirect} userId={user.id} />
+                <Carts
+                  teamId={isTeamRedirect}
+                  userId={user.id}
+                  getCartData={() => getCartData()}
+                />
               </FuseAnimateGroup>
             )}
             {tabValue === 3 && (

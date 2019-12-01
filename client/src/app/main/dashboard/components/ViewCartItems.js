@@ -6,13 +6,7 @@ import ReactTable from "react-table";
 import _ from "@lodash";
 
 function ViewCartItems(props) {
-  const [cartItems, setCartItems] = useState({});
-
-  useEffect(() => {
-    axios.get(`${config.baseURL}/api/v1/user/carts`).then(res => {
-      setCartItems(res.data);
-    });
-  }, []);
+  const { cartItems } = props;
 
   const columns = [
     {
